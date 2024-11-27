@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Multi-Note App</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background-color: #121212;
+
+            color: #ffffff;
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+
+        .app-container {
+
+            max-width: 400px;
+
+            margin: auto;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+
+        }
+
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .header h1 {
+
+            font-size: 24px;
+
+            color: #00ffcc;
+
+        }
+
+
+        .section {
+
+            margin: 20px 0;
+
+        }
+
+
+        .section h2 {
+
+            font-size: 18px;
+
+            color: #00ffcc;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        textarea, input[type="text"], input[type="time"], input[type="date"] {
+
+            width: 100%;
+
+            padding: 10px;
+
+            margin: 5px 0;
+
+            border-radius: 5px;
+
+            border: none;
+
+            background-color: #1e1e1e;
+
+            color: #ffffff;
+
+        }
+
+
+        button {
+
+            width: 100%;
+
+            padding: 10px;
+
+            background-color: #00ffcc;
+
+            border: none;
+
+            border-radius: 5px;
+
+            color: #121212;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+
+        }
+
+
+        button:hover {
+
+            background-color: #00e6b3;
+
+        }
+
+
+        .note-list, .task-list {
+
+            margin-top: 10px;
+
+        }
+
+
+        .note, .task {
+
+            background-color: #1e1e1e;
+
+            padding: 10px;
+
+            margin-bottom: 10px;
+
+            border-radius: 5px;
+
+        }
+
+
+        .calendar, .timer {
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+        }
+
+
+        .timer-display {
+
+            font-size: 24px;
+
+            margin: 20px 0;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <div class="header">
+
+            <h1>Multi-Note App</h1>
+
+        </div>
+
+
+        <!-- Notes Section -->
+
+        <div class="section">
+
+            <h2>Notes</h2>
+
+            <textarea id="noteInput" placeholder="Write your note here..."></textarea>
+
+            <button onclick="addNote()">Add Note</button>
+
+            <div class="note-list" id="noteList"></div>
+
+        </div>
+
+
+        <!-- Task Tracker Section -->
+
+        <div class="section">
+
+            <h2>Task Tracker</h2>
+
+            <input type="text" id="taskInput" placeholder="Add a task...">
+
+            <button onclick="addTask()">Add Task</button>
+
+            <div class="task-list" id="taskList"></div>
+
+        </div>
+
+
+        <!-- Calendar Section -->
+
+        <div class="section">
+
+            <h2>Calendar</h2>
+
+            <input type="date" id="calendar">
+
+        </div>
+
+
+        <!-- Timer Section -->
+
+        <div class="section timer">
+
+            <h2>Timer</h2>
+
+            <div class="timer-display" id="timerDisplay">00:00</div>
+
+            <button onclick="startTimer()">Start Timer</button>
+
+            <button onclick="resetTimer()">Reset Timer</button>
+
+        </div>
+
+
+        <!-- Alarm Section -->
+
+        <div class="section">
+
+            <h2>Alarm</h2>
+
+            <input type="time" id="alarmTime">
+
+            <button onclick="setAlarm()">Set Alarm</button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Notes Functionality
+
+        function addNote() {
+
+            const noteInput = document.getElementById('noteInput');
+
+            const noteList = document.getElementById('noteList');
+
+
+            if (noteInput.value.trim() !== "") {
+
+                const note = document.createElement('div');
+
+                note.className = 'note';
+
+                note.textContent = noteInput.value;
+
+                noteList.appendChild(note);
+
+                noteInput.value = '';
+
+            }
+
+        }
+
+
+        // Task Tracker Functionality
+
+        function addTask() {
+
+            const taskInput = document.getElementById('taskInput');
+
+            const taskList = document.getElementById('taskList');
+
+
+            if (taskInput.value.trim() !== "") {
+
+                const task = document.createElement('div');
+
+                task.className = 'task';
+
+                task.textContent = taskInput.value;
+
+                taskList.appendChild(task);
+
+                taskInput.value = '';
+
+            }
+
+        }
+
+
+        // Timer Functionality
+
+        let timer;
+
+        let time = 0;
+
+
+        function startTimer() {
+
+            clearInterval(timer);
+
+            timer = setInterval(() => {
+
+                time++;
+
+                const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+
+                const seconds = (time % 60).toString().padStart(2, '0');
+
+                document.getElementById('timerDisplay').textContent = `${minutes}:${seconds}`;
+
+            }, 1000);
+
+        }
+
+
+        function resetTimer() {
+
+            clearInterval(timer);
+
+            time = 0;
+
+            document.getElementById('timerDisplay').textContent = "00:00";
+
+        }
+
+
+        // Alarm Functionality
+
+        function setAlarm() {
+
+            const alarmTime = document.getElementById('alarmTime').value;
+
+            if (alarmTime) {
+
+                const now = new Date();
+
+                const alarm = new Date();
+
+                const [hours, minutes] = alarmTime.split(':');
+
+                alarm.setHours(hours, minutes, 0);
+
+
+                const timeToAlarm = alarm - now;
+
+                if (timeToAlarm > 0) {
+
+                    setTimeout(() => {
+
+                        alert('Alarm ringing!');
+
+                    }, timeToAlarm);
+
+                } else {
+
+                    alert('Selected time is in the past.');
+
+                }
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+
